@@ -6,4 +6,5 @@ dependencies:
   - php
   - xdebug
   - composer
+  - phpmyadmin
   - varnish
