@@ -8,3 +8,5 @@ dependencies:
   - composer
   - phpmyadmin
   - varnish
+  - nodejs
+

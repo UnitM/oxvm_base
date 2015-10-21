@@ -1,0 +1,6 @@
+---
+- include: grunt-install.yml
+  when: nodejs.grunt
+
+- include: gulp-install.yml
+  when: nodejs.gulp
