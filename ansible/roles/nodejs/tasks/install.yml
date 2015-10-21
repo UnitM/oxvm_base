@@ -1,7 +1,7 @@
 ---
 - name: Ensure Ubuntu Distro is Supported
   get_url:
-    url='https://deb.nodesource.com/node/dists/{% verbatim %}{{ ansible_distribution_release }}{% endverbatim %}/Release'
+    url='https://deb.nodesource.com/node/dists/{{ ansible_distribution_release }}/Release'
     dest=/dev/null
   register: distrosupported
 
@@ -12,32 +12,37 @@
   when: distrosupported|success
 
 - name: Remove Old Chris Lea Sources
+  sudo: yes
   file:
-    path='/etc/apt/sources.list.d/chris-lea-node_js-{% verbatim %}{{ ansible_distribution_release }}{% endverbatim %}.list'
+    path='/etc/apt/sources.list.d/chris-lea-node_js-{{ ansible_distribution_release }}.list'
     state=absent
   when: distrosupported|success
 
 - name: Add Nodesource Keys
+  sudo: yes
   apt_key:
     url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     state=present
 
 - name: Add Nodesource Apt Sources List Deb
+  sudo: yes
   apt_repository:
-    repo='deb https://deb.nodesource.com/node {% verbatim %}{{ ansible_distribution_release }}{% endverbatim %} main'
+    repo='deb https://deb.nodesource.com/node {{ ansible_distribution_release }} main'
     state=present
   when: distrosupported|success
 
 - name: Add Nodesource Apt Sources List Deb Src
+  sudo: yes
   apt_repository:
-    repo='deb-src https://deb.nodesource.com/node {% verbatim %}{{ ansible_distribution_release }}{% endverbatim %} main'
+    repo='deb-src https://deb.nodesource.com/node {{ ansible_distribution_release }} main'
     state=present
   when: distrosupported|success
 
 - name: Install NodeJS
+  sudo: yes
   apt: pkg=nodejs state=latest update_cache=true
   when: distrosupported|success
   register: nodejsinstalled
 
 - include: taskrunner.yml
-  when nodejsinstalled|success
+  when: nodejsinstalled|success
