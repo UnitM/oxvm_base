@@ -1,0 +1,7 @@
+---
+allow_duplicates: no
+
+dependencies:
+  - { role: apache }
+  - { role: php }
+  - { role: mysql }

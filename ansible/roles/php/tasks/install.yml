@@ -21,5 +21,10 @@
   notify:
     - restart apache
 
+- name: Enable mcrypt
+  sudo: yes
+  shell: php5enmod mcrypt
+  when: "'php5-mcrypt' in php.packages"
+
 - include: configure.yml
 - include: pecl.yml

@@ -1,0 +1,52 @@
+---
+- name: debconf for pma dbconfig-install
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/dbconfig-install' value='true' vtype='boolean'
+
+# MySQL-Datenbankname für phpmyadmin:
+# phpmyadmin      phpmyadmin/db/dbname    string  phpmyadmin
+- name: debconf for pma dbname
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/db/dbname' value='{{phpmyadmin.dbname}}' vtype='string'
+
+# MySQL-Benutzername für phpmyadmin:
+# phpmyadmin  phpmyadmin/db/app-user  string  phpmyadmin
+- name: debconf for pma app-user
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/db/app-user' value='{{phpmyadmin.dbuser}}' vtype='string'
+
+- name: debconf for pma app-pass
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/mysql/app-pass' value='{{phpmyadmin.dbpass}}' vtype='password'
+
+
+# Verbindungsmethode an die MySQL-Datenbank von phpmyadmin:
+# Choices: Unix-Socket, TCP/IP
+# phpmyadmin      phpmyadmin/mysql/method select  unix socket
+
+- name: debconf for pma app-password-confirm
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/app-password-confirm' value='{{phpmyadmin.dbpass}}' vtype='password'
+
+# Name des administrativen Datenbank-Benutzers:
+#phpmyadmin      phpmyadmin/mysql/admin-user     string  root
+
+- name: debconf for pma admin-pass
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/mysql/admin-pass' value='{{mysql.root_password}}' vtype='password'
+
+# Webserver, die automatisch konfiguriert werden sollen:
+# Choices: apache2, lighttpd
+# phpmyadmin      phpmyadmin/reconfigure-webserver        multiselect
+- name: debconf for pma reconfigure-webserver
+  sudo: yes
+  debconf: name=phpmyadmin question='phpmyadmin/reconfigure-webserver' value='apache2' vtype='multiselect'
+
+- name: install pma
+  sudo: yes
+  apt: pkg=phpmyadmin state=present
+  notify:
+    - restart apache
+
+# - name: configure site
+#   file: path=/var/www/html/phpmyadmin src=/usr/share/phpmyadmin state=link
