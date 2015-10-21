@@ -62,3 +62,12 @@ varnish:
   default_config:
     source: ~
     target: /etc/varnish/default.vcl
+phpmyadmin:
+  install: false
+  dbname: phpmyadmin
+  dbuser: phpmyadmin
+  dbpass: phpmyadmin
+nodejs:
+  install: false
+  grunt: false
+  gulp: false
