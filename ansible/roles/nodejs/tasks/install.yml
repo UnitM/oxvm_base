@@ -38,10 +38,16 @@
     state=present
   when: distrosupported|success
 
-- name: Install NodeJS
+- name: Test for apt-transport-https
   sudo: yes
   apt: pkg=nodejs state=latest update_cache=true
   when: distrosupported|success
+  register: apttransporthttps
+
+- name: Install NodeJS
+  sudo: yes
+  apt: pkg=nodejs state=latest update_cache=true
+  when: apttransporthttps|success
   register: nodejsinstalled
 
 - include: taskrunner.yml
